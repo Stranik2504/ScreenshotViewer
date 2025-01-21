@@ -5,8 +5,6 @@ plugins {
     id 'maven-publish'
 }
 
-apply from: ".gradle/build.gradle"
-
 version = project.mod_version
 group = project.maven_group
 
@@ -18,6 +16,12 @@ repositories {
     maven {
         name "Mod Menu Maven Repo"
         url "https://maven.terraformersmc.com/releases"
+    }
+    
+    // Me
+    maven {
+        name "Shared Resources"
+        url "https://maven.enjarai.nl/releases"
     }
 }
 
@@ -35,6 +39,9 @@ dependencies {
 
     implementation "ca.weblite:java-objc-bridge:1.0.0"
     implementation 'io.github.lgatodu47:catconfig:0.3.0'
+
+    // Me
+    modImplementation "nl.enjarai:shared-resources-api:${project.shared_resources}"
 }
 
 processResources {

@@ -30,6 +30,9 @@
     ],
     "modmenu": [
       "io.github.lgatodu47.screenshot_viewer.ScreenshotViewerModMenuApi"
+    ],
+    "shared-resources": [
+      "io.github.lgatodu47.screenshot_viewer.GameResources"
     ]
   },
   "mixins": [

@@ -26,6 +26,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,16 +75,29 @@ public class ScreenshotViewer implements ClientModInitializer {
             }
             if(config.getOrFallback(ScreenshotViewerOptions.SHOW_BUTTON_ON_TITLE_SCREEN, true) && screen instanceof TitleScreen) {
                 List<ClickableWidget> buttons = Screens.getButtons(screen);
+                List<Text> orderWidgetText = List.of(
+                    Text.translatable("skinshuffle.button"),
+                    // Text.translatable("modmenu.title"),
+                    Text.translatable("options.accessibility")
+                );
+                
+                Optional<ClickableWidget> widgetOpt = buttons.stream()
+                        .filter(widget -> orderWidgetText.contains(widget.getMessage()))
+                        .min(Comparator.comparingInt(x -> orderWidgetText.indexOf(x.getMessage())));
+
                 Optional<ClickableWidget> accessibilityWidgetOpt = buttons.stream()
                         .filter(TextIconButtonWidget.class::isInstance)
-                        .filter(widget -> widget.getMessage().equals(Text.translatable("options.accessibility")))
+                        .filter(widget -> 
+                                widget.getMessage().equals(Text.translatable("options.accessibility"))
+                        )
                         .findFirst();
-
-                int x = accessibilityWidgetOpt.map(ClickableWidget::getX).orElse(screen.width / 2 + 104);
-                int y = accessibilityWidgetOpt.map(ClickableWidget::getY).orElse(screen.height / 4 + 132);
+                
+                int x = widgetOpt.map(ClickableWidget::getX).orElse(screen.width / 2 + 104);
+                int y = widgetOpt.map(ClickableWidget::getY).orElse(screen.height / 4 + 132);
+                int widthPreButton = widgetOpt.map(ClickableWidget::getWidth).orElse(20);
                 int width = accessibilityWidgetOpt.map(ClickableWidget::getWidth).orElse(20);
                 int height = accessibilityWidgetOpt.map(ClickableWidget::getHeight).orElse(20);
-                buttons.add(Util.make(new IconButtonWidget(x + width + 4, y, width, height, ScreenshotViewerTexts.MANAGE_SCREENSHOTS, SCREENSHOT_VIEWER_ICON, button -> {
+                buttons.add(Util.make(new IconButtonWidget(x + widthPreButton + 4, y, width, height, ScreenshotViewerTexts.MANAGE_SCREENSHOTS, SCREENSHOT_VIEWER_ICON, button -> {
                     client.setScreen(new ManageScreenshotsScreen(screen));
                 }), btn -> btn.setTooltip(Tooltip.of(ScreenshotViewerTexts.MANAGE_SCREENSHOTS))));
             }

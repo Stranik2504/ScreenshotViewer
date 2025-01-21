@@ -20,6 +20,7 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.ColorHelper;
+import nl.enjarai.shared_resources.api.GameResourceHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
@@ -47,10 +48,20 @@ public class ScreenshotViewerUtils {
     private static final SystemToast.Type COPY_SCREENSHOT = new SystemToast.Type(3000);
 
     public static File getVanillaScreenshotsFolder() {
+        var path = GameResourceHelper.getPathFor(GameResources.SCREENSHOTS);
+        
+        if (path != null)
+            return path.toFile();
+
         return new File(MinecraftClient.getInstance().runDirectory, "screenshots");
     }
 
     public static File getDefaultThumbnailFolder() {
+        var path = GameResourceHelper.getPathFor(GameResources.SCREENSHOTS);
+        
+        if (path != null)
+            return new File(path.toFile(), "thumbnails");
+        
         return new File(MinecraftClient.getInstance().runDirectory, "screenshots/thumbnails");
     }
 
