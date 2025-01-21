@@ -131,7 +131,11 @@ final class ScreenshotList extends AbstractParentElement implements Drawable, Se
      * Updates the children positions.
      */
     void updateChildren(boolean configUpdated) {
-        scrollY = 0;
+        final int totalHeightOfTheChildren = getTotalHeightOfChildren();
+        final int viewHeight = height - 2 * spacing;
+        final int leftOver = totalHeightOfTheChildren - viewHeight;
+        scrollY =  Math.max(0, Math.min(scrollY, leftOver));
+        
         updateVariables();
         final int maxXOff = screenshotsPerRow - 1;
 
